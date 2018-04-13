@@ -1,0 +1,8 @@
+<form action="{% url 'create_new_blog' %}" method="post">
+{% csrf_token %}
+	<label for="title">Blog Title:</label><br>
+	<input name="title" type="text" style="width:100%;padding-bottom:5px"><br>
+	<label for="content">Blog Content:</label><br>
+	<textarea name="content" style="width:100%;height:70%"></textarea>
+	<input type="submit" value="Submit"><br>
+</form>

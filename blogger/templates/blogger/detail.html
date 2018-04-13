@@ -1,4 +1,7 @@
-<h1>{{blog.title}}</h1>
+<div style="display:flex;flex-direction:row;justify-content:center;align-items:center">
+	<h1 style="flex:1 0 0;">{{blog.title}}</h1>
+	<a style="flex:1 0 0;" href="{% url 'delete_blog' blog.id %}">Delete</a>
+</div>
 <p>
 {{blog.content}}
 </p>
