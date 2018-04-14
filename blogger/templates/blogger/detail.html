@@ -8,3 +8,80 @@
 <p>
 {{blog.pub_date}}
 </p>
+<div>
+	<h4>Comments</h4>
+	<div id="comments_list">
+	{% for comment in blog.comment_set.all %}
+		<div style="border:1px solid black;padding-bottom:5px">
+			<div style="display:flex;flex-direction:row;text-align:center">
+				<p style="flex:1 0 0"><b>{{comment.text}}</b></p>
+				<button onclick="deleteComment({{comment.id}})">Delete</button>
+			</div>
+			<p>{{comment.pub_date}}</p>
+		</div>
+	{% endfor %}
+	</div>
+</div>
+<div style="padding-top:10px">
+	<label for="comment_text">Enter comment:</label>
+	<input name="comment_text" id="comment_text" type="text" style="" />
+	<button onclick="createNewComment()">Post</button>
+</div>
+<script>
+
+	function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            let cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+	function createNewComment(){
+		let elem = document.getElementById("comment_text");
+		// alert(elem.value);
+		let params = "comment_text="+elem.value
+		let http = new XMLHttpRequest();
+		let url = "{% url 'create_comment' blog.id %}";
+
+		let csrftoken = getCookie('csrftoken');
+
+		http.open("POST", url, true);
+		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		http.setRequestHeader("X-CSRFToken", csrftoken);
+		http.onreadystatechange = function(){
+			if(http.readyState == 4 && http.status == 200) {
+		        // alert(http.responseText);
+		        location.reload();
+		    }
+		}
+		http.send(params);
+	}
+
+	function deleteComment(id){
+		let http = new XMLHttpRequest();
+		let url = "{% url 'delete_comment' 0 %}".replace("0", id);
+
+		let csrftoken = getCookie('csrftoken');
+
+		http.open("POST", url, true);
+		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		http.setRequestHeader("X-CSRFToken", csrftoken);
+		http.onreadystatechange = function(){
+			if(http.readyState == 4 && http.status == 200) {
+		        // alert(http.responseText);
+		        location.reload();
+		    }
+		}
+		http.send();	
+	}
+
+</script>

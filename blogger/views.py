@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from .models import Blog
+from .models import Blog, Comment
 from django.utils import timezone
 from django.urls import reverse
 # Create your views here.
@@ -33,3 +33,15 @@ def delete_blog(request, blog_id):
 		raise Http404("Blog does not exist")
 
 	return HttpResponseRedirect(reverse('index'))
+
+def create_comment(request, blog_id):
+	Comment.objects.create(text=request.POST['comment_text'], blog_id=blog_id, pub_date=timezone.now())
+	return HttpResponse("Done")
+
+def delete_comment(request, comment_id):
+	try:
+		Comment.objects.get(id=comment_id).delete()
+	except:
+		raise Http404("Comment does not exist")
+
+	return HttpResponse("Done")	
