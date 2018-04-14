@@ -9,6 +9,10 @@ from django.contrib.auth.decorators import login_required
 def index(request):
 	blog_list = Blog.objects.order_by('-pub_date')
 	context = {"blog_list":blog_list}
+
+	if request.user.is_authenticated:
+		context["user"] = request.user
+
 	return render(request, 'blogger/index.html', context)
 
 def detail(request, blog_id):
